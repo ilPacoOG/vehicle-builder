@@ -402,17 +402,25 @@ class Cli {
         else if (answers.action === 'Tow vehicle') {
           for (let i = 0; i < this.vehicles.length; i++) {
             if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              this.findVehicleToTow(this.vehicles[i] as Truck);
-            }
+              if (this.vehicles[i] instanceof Truck) {
+                this.findVehicleToTow(this.vehicles[i] as Truck);
+                return;
+              } else {
+                console.log('You can only tow with a truck.');
+              }
+           }
           }
-          return;
         }
         // TODO: add statements to perform the wheelie action only if the selected vehicle is a motorbike
 
         else if (answers.action === 'Wheelie') {
           for (let i = 0; i < this.vehicles.length; i++) {
             if (this.vehicles[i].vin === this.selectedVehicleVin) {
-              (this.vehicles[i] as Motorbike).wheelie();
+              if (this.vehicles[i] instanceof Motorbike) {
+                (this.vehicles[i] as Motorbike).wheelie();
+              } else {
+                  console.log('You can only wheelie with a motorbike.');
+                }
             }
           }
         }
