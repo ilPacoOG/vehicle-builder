@@ -287,22 +287,29 @@ class Cli {
           choices: this.vehicles.map((vehicle) => {
             return {
               name: `${vehicle.vin} -- ${vehicle.make} ${vehicle.model}`,
-              value: vehicle,
+              value: vehicle.vin,  
             };
           }),
         },
       ])
+
+      
       .then((answers) => {
         // TODO: check if the selected vehicle is the truck
-        const vehicleToTow = answers.vehicleToTow;
+        const vehicleToTowVin = answers.vehicleToTow;
+        const vehicleToTow = this.vehicles.find((vehicle) => vehicle.vin === vehicleToTowVin);
          // TODO: if it is, log that the truck cannot tow itself then perform actions on the truck to allow the user to select another action
-        if (vehicleToTow instanceof Truck) {
+         if (vehicleToTow && vehicleToTow.vin === truck.vin) {
           console.log('A truck cannot tow itself');
         // TODO: if it is not, tow the selected vehicle then perform actions on the truck to allow the user to select another action  
-        } else {
+        } else if (vehicleToTow) {
           truck.tow(vehicleToTow);
-        }
-        this.performActions();    
+          console.log(`${truck.make} is towing ${vehicleToTow.make} ${vehicleToTow.model}`);
+        } else {
+          console.log("The truck cannot tow this vehicle.");
+        
+      }
+        this.performActions();
         
       });
   }
@@ -392,7 +399,7 @@ class Cli {
           }
         }
         // TODO: add statements to perform the tow action only if the selected vehicle is a truck. Call the findVehicleToTow method to find a vehicle to tow and pass the selected truck as an argument. After calling the findVehicleToTow method, you will need to return to avoid instantly calling the performActions method again since findVehicleToTow is asynchronous.
-        else if (answers.action === 'Tow') {
+        else if (answers.action === 'Tow vehicle') {
           for (let i = 0; i < this.vehicles.length; i++) {
             if (this.vehicles[i].vin === this.selectedVehicleVin) {
               this.findVehicleToTow(this.vehicles[i] as Truck);
